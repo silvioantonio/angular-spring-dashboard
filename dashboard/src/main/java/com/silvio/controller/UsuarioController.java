@@ -6,10 +6,10 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,13 +39,25 @@ public class UsuarioController {
 	
 	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public Usuario getUsuario(@Valid @PathVariable Long id) {
+	public Usuario getUsuarioId(@Valid @PathVariable Long id) {
 		Optional<Usuario> usuario = usuarioRepository.findById( id);
 		
 		if(usuario.get() == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID do Usuario não encontrado");
 		}
 		return usuario.get();
+	}
+	
+	@GetMapping("/nome")
+	@ResponseStatus(HttpStatus.OK)
+	public Usuario getUsuarioNome(@Valid @RequestBody Usuario usuario) {
+		Optional<Usuario> opUsuario = usuarioRepository.findByNome(usuario.getNome());
+		
+		if(opUsuario.isPresent()) {
+			return opUsuario.get();
+		}else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario com esse nome não existe ");
+		}
 	}
 	
 	@PostMapping
@@ -73,5 +85,32 @@ public class UsuarioController {
 		}
 		
 	}
+	
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public void deletarUsuarioId(@Valid @PathVariable Long id) {
+		try {
+			usuarioRepository.deleteById(id);
+		} catch( IllegalArgumentException ie) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O ID não deve estar vazio ");
+		} catch(EmptyResultDataAccessException er) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O ID deve estar cadastrado ");
+		}
+	}
+	
+	@DeleteMapping
+	@ResponseStatus(HttpStatus.OK)
+	public void deletarUsuarioNome(@Valid @RequestBody Usuario usuario) {
+		Optional<Usuario> opUsuario = usuarioRepository.findByNome(usuario.getNome());
+		
+		if(opUsuario.isPresent()) {
+			 usuarioRepository.delete(opUsuario.get());
+		}else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O Usuario não existe ");
+		}
+		
+	}
+	
+	
 	
 }

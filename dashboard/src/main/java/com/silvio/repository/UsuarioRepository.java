@@ -8,4 +8,6 @@ import com.silvio.model.Usuario;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
 	Optional<Usuario> findByNome(String nome);
+
+
 }
