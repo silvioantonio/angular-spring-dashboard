@@ -1,5 +1,6 @@
 package com.silvio.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -15,7 +16,8 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-public class ItemList {
+public class ItemList implements Serializable {
+
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +41,18 @@ public class ItemList {
 	private Usuario usuario;
 	
 	@Enumerated(EnumType.STRING)
-	private TipoLista tipolista;
+	private TipoLista tipoLista;
+	
+	public ItemList() {}
+	
+	public ItemList(String nome, String descricao, Date dataInicio, Date dataFim, Usuario usuario, TipoLista tipoLista) {
+		this.nome = nome;
+		this.descricao = descricao;
+		this.dataInicio = dataInicio;
+		this.dataFim = dataFim;
+		this.usuario = usuario;
+		this.tipoLista = tipoLista;
+	}
 
 	public Long getId() {
 		return id;
@@ -89,12 +102,12 @@ public class ItemList {
 		this.usuario = usuario;
 	}
 
-	public TipoLista getTipolista() {
-		return tipolista;
+	public TipoLista getTipoLista() {
+		return tipoLista;
 	}
 
-	public void setTipolista(TipoLista tipolista) {
-		this.tipolista = tipolista;
+	public void setTipolista(TipoLista tipoLista) {
+		this.tipoLista = tipoLista;
 	}
 
 	@Override

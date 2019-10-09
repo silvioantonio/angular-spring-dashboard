@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.silvio.model.ItemList;
+import com.silvio.model.TipoLista;
 import com.silvio.repository.ItemListRepository;
 
 @CrossOrigin
@@ -52,19 +53,20 @@ public class ItemListController {
 		if(item.isPresent()) {
 			return item.get();
 		}else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario com esse nome não existe ");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O Item com esse nome não existe ");
 		}
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ItemList addItem(@Valid @RequestBody ItemList itemList) {
+	public ItemList addItem(@RequestBody ItemList itemList) {
 		Optional<ItemList> itemExistente = itemListRepository.findByNome(itemList.getNome());
 		if(itemExistente.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					"Já existe um item com esse nome");
 		}
 		return itemListRepository.save(itemList);
+		 
 	}
 	
 	
