@@ -6,8 +6,10 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.silvio.model.ItemList;
-import com.silvio.model.TipoLista;
 import com.silvio.repository.ItemListRepository;
 
 @CrossOrigin
@@ -47,9 +48,8 @@ public class ItemListController {
 	
 	@GetMapping("/nome")
 	@ResponseStatus(HttpStatus.OK)
-	public ItemList getItemNome(@Valid ItemList itemList) {
+	public ItemList getItemNome(@Valid @RequestBody ItemList itemList) {
 		Optional<ItemList> item = itemListRepository.findByNome(itemList.getNome());
-		
 		if(item.isPresent()) {
 			return item.get();
 		}else {
@@ -60,7 +60,7 @@ public class ItemListController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ItemList addItem(@RequestBody ItemList itemList) {
-		Optional<ItemList> itemExistente = itemListRepository.findByNome(itemList.getNome());
+		Optional<ItemList> itemExistente = itemListRepository.findByNome(itemList.getClass().getName());
 		if(itemExistente.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					"Já existe um item com esse nome");
@@ -69,5 +69,16 @@ public class ItemListController {
 		 
 	}
 	
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public void deleteItemId(@Valid @PathVariable Long id) {
+		try{
+			itemListRepository.deleteById(id);
+		} catch (IllegalArgumentException i) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " O valor de ID nao pode ser null ", i.getCause());
+		} catch (EmptyResultDataAccessException e){
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, " O valor do ID deve ser valido ", e.getCause());
+		} 
+	}
 	
 }
