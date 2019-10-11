@@ -81,4 +81,16 @@ public class ItemListController {
 		} 
 	}
 	
+	@DeleteMapping
+	@ResponseStatus(HttpStatus.OK)
+	public void deleteItemNome(@Valid @RequestBody ItemList itemList) {
+		Optional<ItemList> item = itemListRepository.findByNome(itemList.getNome());
+		
+		if(item.isPresent())
+			itemListRepository.deleteById(item.get().getId());
+		else
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, " O valor do nome deve ser valido ");
+	}
+	
+	
 }
