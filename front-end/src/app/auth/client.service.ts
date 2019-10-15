@@ -8,7 +8,7 @@ import { Usuario } from './usuario';
 })
 export class ClientService {
 
-  url = 'http://localhost:8080/';
+  url = 'http://localhost:8080';
 
   constructor(private httpClient: HttpClient) { }
 
@@ -18,6 +18,10 @@ export class ClientService {
 
   getById(id: number) {
     return this.httpClient.get<Usuario>(this.url + '/' + id);
+  }
+
+  getByNomeAndSenha(usuario: Usuario) {
+    return this.httpClient.get<Usuario>(this.url + '/' + usuario);
   }
 
   create(usuario: Usuario) {

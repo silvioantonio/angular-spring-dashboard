@@ -1,8 +1,8 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 
-import { Usuario } from '../usuario';
+import { Usuario } from '../auth/usuario';
+import { ClientService } from '../auth/client.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,18 +11,23 @@ export class AuthService {
 
   private usuarioAutenticado = false;
 
-  apiClient = 'http://localhost:8080/';
-
-  username: string;
-  password: string;
-
   mostrarMenuEmitter = new EventEmitter<boolean>();
 
-  constructor(private router: Router, private httpClient: HttpClient) { }
+  constructor(private router: Router, private client: ClientService) { }
 
   fazerLogin(usuario: Usuario) {
-    username = this.httpClient.get
-    if(usuario.nome === )
+    if (this.client.getByNomeAndSenha(usuario)) {
+      this.usuarioAutenticado = true;
+      this.mostrarMenuEmitter.emit(true);
+      this.router.navigate(['/']);
+    } else {
+      this.usuarioAutenticado = false;
+      this.mostrarMenuEmitter.emit(false);
+    }
+  }
+
+  isUsuarioAutenticado() {
+    return this.usuarioAutenticado;
   }
 
 }
