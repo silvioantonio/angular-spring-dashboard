@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -17,10 +18,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class ItemList implements Serializable {
-
+	
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
 	@NotEmpty
@@ -38,6 +39,7 @@ public class ItemList implements Serializable {
 	private Date dataFim;
 	
 	@ManyToOne
+	@JoinColumn(name="usuario_id", referencedColumnName="id")
 	private Usuario usuario;
 	
 	@Enumerated(EnumType.STRING)

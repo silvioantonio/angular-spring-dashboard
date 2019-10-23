@@ -37,6 +37,17 @@ public class UsuarioController {
 		return usuarioRepository.findAll();
 	}
 	
+	@GetMapping
+	@ResponseStatus(HttpStatus.OK)
+	public boolean getAcesso(@RequestBody Usuario usuario){
+		Optional<Usuario> user = usuarioRepository.findByLoginAndSenha(usuario.getLogin(), usuario.getSenha());
+		if(!user.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuario nao encontrado ");
+		} else {
+			return true;
+		}
+	}
+	
 	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Usuario getUsuarioId(@Valid @PathVariable Long id) {

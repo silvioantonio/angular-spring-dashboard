@@ -1,30 +1,51 @@
 package com.silvio.model;
 
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Entity
+@Table(name="usuario")
 public class Usuario {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
 	@NotEmpty
 	@Size(max=80)
 	private String nome;
 	
-	@OneToOne
-	private Acesso acesso;
+	@NotEmpty
+	@Size(max=50)
+	private String login;
 	
-	@OneToMany
+	@NotEmpty
+	@Size(max=10)
+	private String senha;
+	
+	@NotEmpty
+	@Size(max=50)
+	private String email;
+	
+	@Enumerated(EnumType.STRING)
+	private TipoAcesso tipoAcesso;
+	
+	@OneToMany(mappedBy = "usuario",cascade = CascadeType.ALL)
 	private List<ItemList> itemLista;
 
 	public Long getId() {
@@ -43,12 +64,36 @@ public class Usuario {
 		this.nome = nome;
 	}
 
-	public Acesso getAcesso() {
-		return acesso;
+	public void setLogin(String login) {
+		this.login = login;
+	}
+	
+	public String getLogin() {
+		return this.login;
 	}
 
-	public void setAcesso(Acesso acesso) {
-		this.acesso = acesso;
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	public TipoAcesso getTipoAcesso() {
+		return tipoAcesso;
+	}
+
+	public void setTipoAcesso(TipoAcesso tipoAcesso) {
+		this.tipoAcesso = tipoAcesso;
 	}
 
 	public List<ItemList> getItemLista() {

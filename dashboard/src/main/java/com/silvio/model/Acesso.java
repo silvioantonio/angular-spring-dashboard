@@ -1,20 +1,25 @@
 package com.silvio.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Entity
+@Table(name="acesso")
 public class Acesso {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
 	@NotEmpty
@@ -30,6 +35,9 @@ public class Acesso {
 	private String email;
 	
 	@OneToOne
+	@JoinTable(name="usuario_acesso", 
+	joinColumns={@JoinColumn(name="acesso_id", referencedColumnName="id")},  
+    inverseJoinColumns={@JoinColumn(name="usuario_id", referencedColumnName="id")})
 	private Usuario usuario;
 	
 	@Enumerated(EnumType.STRING)
